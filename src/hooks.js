@@ -1,6 +1,5 @@
 import { useState } from "react";
 import axios from "axios";
-import { v4 as uuid } from "uuid";
 
 const useFlip = (initialFlipState = true) => {
     const [isFlipped, setIsFlipped] = useState(initialFlipState);
@@ -13,12 +12,9 @@ const useFlip = (initialFlipState = true) => {
 const useAxios = (baseUrl) => {
     const [dataArray, setDataArray] = useState([])
 
-    const addData = async (restOfUrl="") => {
-        console.log("Sending Axios get request...")
+    const addData = async (formatter = data => data, restOfUrl="") => {
         const response = await axios.get(`${baseUrl}${restOfUrl}`);
-        console.log("Printing response.data...")
-        console.log(response.data);
-        setDataArray(dataArray => [...dataArray, { ...response.data, id: uuid() }]);
+        setDataArray(dataArray => [...dataArray, formatter(response.data)]);
     };
 
     return [dataArray, addData];
